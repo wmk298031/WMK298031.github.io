@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容展示平台</title>
+    
+    <!-- 1. 修复Tailwind引入（用最新稳定版CDN） -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. 修复图标库（换用更稳定的Heroicons，替代旧版Font Awesome） -->
+    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/dist/heroicons.min.js"></script>
+    
+    <!-- 自定义Tailwind配置（确保颜色、字体生效） -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6', // 主色（蓝色）
+                        secondary: '#10B981', // 辅助色（绿色）
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义样式（修复动画和交互样式） -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .fade-in {
+                animation: fadeIn 0.5s ease-out;
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- 页头 -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">内容浏览系统</h1>
+            <p class="text-gray-600 mt-2">点击左侧按钮查看详情</p>
+        </header>
+        
+        <!-- 主布局：左侧按钮 + 右侧内容 -->
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- 左侧按钮区 -->
+            <div class="md:w-1/4 bg-white rounded-lg shadow p-5">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                    <!-- 替换为Heroicons图标 -->
+                    <svg class="w-6 h-6 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 4h18M3 8h18M3 12h18M3 16h18M3 20h18"></path>
+                    </svg>
+                    内容列表
+                </h2>
+                <div class="space-y-2" id="buttonContainer"></div>
+            </div>
+            
+            <!-- 右侧内容区 -->
+            <div class="md:w-3/4 bg-white rounded-lg shadow p-6">
+                <div id="contentArea" class="min-h-64 flex items-center justify-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const contentList = [
+            {
+                id: 1,
+                title: "春天景色",
+                description: "春天是万物复苏的季节，公园里的花儿竞相开放...",
+                image: "https://picsum.photos/id/15/800/500"
+            },
+            {
+                id: 2,
+                title: "现代科技",
+                description: "这款智能设备融合了最新的科技成果...",
+                image: "https://picsum.photos/id/25/800/500"
+            },
+            {
+                id: 3,
+                title: "美食文化",
+                description: "这道传统美食有着数百年的历史...",
+                image: "https://picsum.photos/id/35/800/500"
+            },
+            {
+                id: 4,
+                title: "历史建筑",
+                description: "这座古建筑始建于明代...",
+                image: "https://picsum.photos/id/45/800/500"
+            }
+        ];
+
+        function createButtons() {
+            const container = document.getElementById('buttonContainer');
+            contentList.forEach((item, index) => {
+                const button = document.createElement('button');
+                // 用Tailwind类直接写样式（避免@apply依赖问题）
+                button.className = `w-full text-left px-4 py-2 rounded-md border transition-colors duration-200 
+                    ${index === 0 ? 'bg-primary text-white border-primary' : 'border-gray-200 hover:border-primary hover:text-primary'}`;
+                button.innerHTML = `
+                    <span class="flex items-center">
+                        <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        ${item.title}
+                    </span>
+                `;
+                button.addEventListener('click', () => showContent(index));
+                container.appendChild(button);
+            });
+        }
+
+        function showContent(index) {
+            const item = contentList[index];
+            const contentArea = document.getElementById('contentArea');
+            
+            contentArea.innerHTML = `
+                <div class="w-full fade-in">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">${item.title}</h2>
+                    <p class="text-gray-600 mb-5 leading-relaxed">${item.description}</p>
+                    <div class="rounded-lg overflow-hidden shadow">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+            `;
+            
+            const buttons = document.querySelectorAll('#buttonContainer button');
+            buttons.forEach((btn, i) => {
+                btn.className = `w-full text-left px-4 py-2 rounded-md border transition-colors duration-200 
+                    ${i === index ? 'bg-primary text-white border-primary' : 'border-gray-200 hover:border-primary hover:text-primary'}`;
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            createButtons();
+            contentList.length && showContent(0);
+        });
+    </script>
+</body>
+</html>
