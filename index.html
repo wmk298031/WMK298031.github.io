@@ -5,141 +5,244 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>河北省爱心公益协会</title>
     
-    <!-- 1. 修复Tailwind引入（用最新稳定版CDN） -->
+    <!-- 引入外部资源 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 2. 修复图标库（换用更稳定的Heroicons，替代旧版Font Awesome） -->
-    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/dist/heroicons.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
-    <!-- 自定义Tailwind配置（确保颜色、字体生效） -->
+    <!-- 配置Tailwind自定义颜色 -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3B82F6', // 主色（蓝色）
-                        secondary: '#10B981', // 辅助色（绿色）
-                    },
+                        primary: '#E63946', // 公益红色主色调
+                        secondary: '#1D3557',
+                    }
                 }
             }
         }
     </script>
     
-    <!-- 自定义样式（修复动画和交互样式） -->
     <style type="text/tailwindcss">
         @layer utilities {
-            .fade-in {
-                animation: fadeIn 0.5s ease-out;
+            .nav-active {
+                @apply bg-white/20 border-l-4 border-white;
             }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <!-- 页头 -->
-        <header class="mb-8 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">内容浏览系统</h1>
-            <p class="text-gray-600 mt-2">点击左侧按钮查看详情</p>
-        </header>
+<body class="bg-gray-50 min-h-screen font-sans text-gray-800">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- 左侧导航栏 -->
+        <aside class="bg-primary text-white w-full md:w-64 shadow-lg z-10">
+            <!-- 协会Logo和名称 -->
+            <div class="p-6 text-center border-b border-white/20">
+                <div class="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center mb-4 shadow-md">
+                    <i class="fa fa-heart text-4xl text-primary"></i>
+                </div>
+                <h1 class="text-xl font-bold">河北省爱心公益协会</h1>
+                <p class="text-sm mt-2 text-white/80">传递爱心 · 服务社会</p>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="p-4">
+                <ul class="space-y-1">
+                    <li>
+                        <button class="nav-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center nav-active" data-target="home">
+                            <i class="fa fa-home w-6 mr-3"></i>
+                            <span>首页</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center" data-target="about">
+                            <i class="fa fa-info-circle w-6 mr-3"></i>
+                            <span>关于我们</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center" data-target="volunteer">
+                            <i class="fa fa-users w-6 mr-3"></i>
+                            <span>志愿风采</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center" data-target="wheelchair">
+                            <i class="fa fa-wheelchair w-6 mr-3"></i>
+                            <span>轮椅借用</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
         
-        <!-- 主布局：左侧按钮 + 右侧内容 -->
-        <div class="flex flex-col md:flex-row gap-6">
-            <!-- 左侧按钮区 -->
-            <div class="md:w-1/4 bg-white rounded-lg shadow p-5">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-                    <!-- 替换为Heroicons图标 -->
-                    <svg class="w-6 h-6 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 4h18M3 8h18M3 12h18M3 16h18M3 20h18"></path>
-                    </svg>
-                    内容列表
-                </h2>
-                <div class="space-y-2" id="buttonContainer"></div>
-            </div>
-            
-            <!-- 右侧内容区 -->
-            <div class="md:w-3/4 bg-white rounded-lg shadow p-6">
-                <div id="contentArea" class="min-h-64 flex items-center justify-center"></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const contentList = [
-            {
-                id: 1,
-                title: "关于我们",
-                description: "春天是万物复苏的季节，公园里的花儿竞相开放...",
-                image: "https://picsum.photos/id/15/800/500"
-            },
-            {
-                id: 2,
-                title: "联系我们",
-                description: "这款智能设备融合了最新的科技成果...",
-                image: "https://picsum.photos/id/25/800/500"
-            },
-            {
-                id: 3,
-                title: "美食文化",
-                description: "这道传统美食有着数百年的历史...",
-                image: "https://picsum.photos/id/35/800/500"
-            },
-            {
-                id: 4,
-                title: "历史建筑",
-                description: "这座古建筑始建于明代...",
-                image: "https://picsum.photos/id/45/800/500"
-            }
-        ];
-
-        function createButtons() {
-            const container = document.getElementById('buttonContainer');
-            contentList.forEach((item, index) => {
-                const button = document.createElement('button');
-                // 用Tailwind类直接写样式（避免@apply依赖问题）
-                button.className = `w-full text-left px-4 py-2 rounded-md border transition-colors duration-200 
-                    ${index === 0 ? 'bg-primary text-white border-primary' : 'border-gray-200 hover:border-primary hover:text-primary'}`;
-                button.innerHTML = `
-                    <span class="flex items-center">
-                        <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 5l7 7-7 7"></path>
-                        </svg>
-                        ${item.title}
-                    </span>
-                `;
-                button.addEventListener('click', () => showContent(index));
-                container.appendChild(button);
-            });
-        }
-
-        function showContent(index) {
-            const item = contentList[index];
-            const contentArea = document.getElementById('contentArea');
-            
-            contentArea.innerHTML = `
-                <div class="w-full fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">${item.title}</h2>
-                    <p class="text-gray-600 mb-5 leading-relaxed">${item.description}</p>
-                    <div class="rounded-lg overflow-hidden shadow">
-                        <img src="${item.image}" alt="${item.title}" class="w-full h-auto object-cover">
+        <!-- 右侧内容区域 -->
+        <main class="flex-1 overflow-x-hidden">
+            <!-- 首页内容 -->
+            <section id="home" class="content-section min-h-screen">
+                <div class="w-full h-full relative">
+                    <img src="https://picsum.photos/id/1059/1600/900" alt="河北省爱心公益协会公益活动照片" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <div class="text-center text-white px-6">
+                            <h2 class="text-4xl md:text-6xl font-bold mb-6">河北省爱心公益协会</h2>
+                            <p class="text-xl md:text-2xl max-w-3xl mx-auto">用爱心传递温暖，用行动践行公益</p>
+                        </div>
                     </div>
                 </div>
-            `;
+            </section>
             
-            const buttons = document.querySelectorAll('#buttonContainer button');
-            buttons.forEach((btn, i) => {
-                btn.className = `w-full text-left px-4 py-2 rounded-md border transition-colors duration-200 
-                    ${i === index ? 'bg-primary text-white border-primary' : 'border-gray-200 hover:border-primary hover:text-primary'}`;
+            <!-- 关于我们内容 -->
+            <section id="about" class="content-section hidden min-h-screen p-8 md:p-16">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-8 text-secondary border-b pb-2">关于我们</h2>
+                    
+                    <div class="flex flex-col md:flex-row gap-8 items-center">
+                        <div class="w-full md:w-1/2 rounded-xl overflow-hidden shadow-lg">
+                            <img src="https://picsum.photos/id/1071/800/600" alt="河北省爱心公益协会办公环境" class="w-full h-auto">
+                        </div>
+                        
+                        <div class="w-full md:w-1/2">
+                            <p class="text-lg leading-relaxed">
+                                河北省爱心公益协会成立于2010年，是经河北省民政厅批准注册的非营利性社会组织。协会致力于推动河北省公益事业发展，组织开展各类爱心公益活动。十余年来，协会累计组织公益活动1200余次，参与志愿者超过5万人次，帮扶困难群众超过10万人。我们的宗旨是："传递爱心，服务社会，促进和谐，共建美好家园"。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 志愿风采内容 -->
+            <section id="volunteer" class="content-section hidden min-h-screen p-8 md:p-16 bg-gray-50">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-8 text-secondary border-b pb-2">志愿风采</h2>
+                    
+                    <div class="space-y-12">
+                        <!-- 志愿风采1 -->
+                        <div class="flex flex-col md:flex-row gap-6 items-center bg-white p-6 rounded-xl shadow-md">
+                            <div class="w-full md:w-1/3 rounded-lg overflow-hidden">
+                                <img src="https://picsum.photos/id/1025/600/400" alt="关爱孤寡老人活动" class="w-full h-auto">
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <p class="text-gray-700">志愿者们定期前往社区养老院，为孤寡老人提供生活照料、陪伴聊天、文艺表演等服务，让老人们感受到家的温暖。每逢传统节日，志愿者们还会为老人们准备节日礼物和特色美食，共同庆祝节日。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 志愿风采2 -->
+                        <div class="flex flex-col md:flex-row gap-6 items-center bg-white p-6 rounded-xl shadow-md">
+                            <div class="w-full md:w-1/3 rounded-lg overflow-hidden">
+                                <img src="https://picsum.photos/id/20/600/400" alt="乡村助学行动" class="w-full h-auto">
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <p class="text-gray-700">志愿者团队深入河北省贫困乡村学校，开展支教活动，为孩子们带去新知识、新视野，并捐赠学习用品和图书。同时，我们还组织城市学生与乡村学生结对帮扶，促进城乡教育资源共享。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 志愿风采3 -->
+                        <div class="flex flex-col md:flex-row gap-6 items-center bg-white p-6 rounded-xl shadow-md">
+                            <div class="w-full md:w-1/3 rounded-lg overflow-hidden">
+                                <img src="https://picsum.photos/id/1060/600/400" alt="残疾人关爱活动" class="w-full h-auto">
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <p class="text-gray-700">针对残障人士开展的关爱活动，包括生活帮扶、技能培训、心理疏导等，帮助他们增强生活信心，融入社会。我们还积极推动无障碍设施建设，为残障人士创造更加便利的生活环境。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 志愿风采4 -->
+                        <div class="flex flex-col md:flex-row gap-6 items-center bg-white p-6 rounded-xl shadow-md">
+                            <div class="w-full md:w-1/3 rounded-lg overflow-hidden">
+                                <img src="https://picsum.photos/id/1047/600/400" alt="环保公益行动" class="w-full h-auto">
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <p class="text-gray-700">组织志愿者开展垃圾分类宣传、河道清理、植树造林等环保活动，倡导绿色生活理念，共建美丽河北。每年植树节，我们都会组织大型植树活动，累计植树已超过10万棵。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 志愿风采5 -->
+                        <div class="flex flex-col md:flex-row gap-6 items-center bg-white p-6 rounded-xl shadow-md">
+                            <div class="w-full md:w-1/3 rounded-lg overflow-hidden">
+                                <img src="https://picsum.photos/id/325/600/400" alt="社区服务日" class="w-full h-auto">
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <p class="text-gray-700">每月定期开展的社区服务活动，包括免费体检、法律咨询、家电维修等便民服务，受到居民广泛好评。我们还针对社区特殊群体提供一对一帮扶服务，解决实际生活困难。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 志愿风采6 -->
+                        <div class="flex flex-col md:flex-row gap-6 items-center bg-white p-6 rounded-xl shadow-md">
+                            <div class="w-full md:w-1/3 rounded-lg overflow-hidden">
+                                <img src="https://picsum.photos/id/177/600/400" alt="公益募捐活动" class="w-full h-auto">
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <p class="text-gray-700">组织各类公益募捐活动，为灾区群众、贫困家庭筹集善款和物资，帮助他们渡过难关，重建家园。我们坚持公开透明的原则，定期公布善款使用情况，接受社会监督。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 轮椅借用内容 -->
+            <section id="wheelchair" class="content-section hidden min-h-screen p-8 md:p-16">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-8 text-secondary border-b pb-2">轮椅借用规则与教程</h2>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                <i class="fa fa-wheelchair text-2xl text-primary"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold">轮椅借用服务</h3>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-6">
+                            为方便行动不便人士出行，我协会提供轮椅借用服务。凡河北省内居民，凭有效身份证件均可申请借用，借用期限最长为7天。借用时需缴纳押金500元，归还轮椅并检查完好后全额退还。借用期间需妥善保管轮椅，如有损坏需按规定赔偿。如需延长借用期限，请提前1天联系协会办理续借手续。使用前请仔细阅读使用说明书，确保安全使用。如有任何疑问，请联系：0311-12345678。
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- 交互逻辑 -->
+    <script>
+        // 导航按钮点击事件
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按钮的激活状态
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('nav-active');
+                });
+                
+                // 添加当前按钮的激活状态
+                this.classList.add('nav-active');
+                
+                // 获取目标内容区域
+                const targetId = this.getAttribute('data-target');
+                
+                // 隐藏所有内容区域
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // 显示目标内容区域并添加动画
+                const targetSection = document.getElementById(targetId);
+                targetSection.classList.remove('hidden');
+                targetSection.classList.add('fade-in');
+                
+                // 滚动到顶部
+                window.scrollTo(0, 0);
+                
+                // 移除动画类以允许下次触发
+                setTimeout(() => {
+                    targetSection.classList.remove('fade-in');
+                }, 500);
             });
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            createButtons();
-            contentList.length && showContent(0);
         });
     </script>
 </body>
-
 </html>
+    
