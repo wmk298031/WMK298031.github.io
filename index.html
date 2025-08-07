@@ -44,7 +44,7 @@
         
         .logo-container {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
             padding: 0 20px;
         }
         
@@ -62,26 +62,30 @@
             box-shadow: 0 0 15px rgba(231,76,60,0.3); /* 悬浮时增加阴影效果 */
         }
         
+        /* 导航按钮改为一行排列 */
         .nav-buttons {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            padding: 0 15px;
+            flex-wrap: nowrap;
+            gap: 8px;
+            padding: 0 10px;
+            overflow-x: auto;
+            white-space: nowrap;
         }
         
         .nav-btn {
-            padding: 12px 22px;
+            padding: 10px 18px;
             background-color: white;
             color: var(--primary-color);
             border: 2px solid var(--primary-color);
             border-radius: 30px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
         
         .nav-btn::after {
@@ -154,7 +158,7 @@
             border-radius: 3px;
         }
         
-        /* 首页样式 - 已更换为指定图片 */
+        /* 首页样式 - 调整布局 */
         .home-banner {
             position: relative;
             width: 100%;
@@ -165,8 +169,8 @@
         .banner-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            filter: brightness(0.8);
+            object-fit: cover; /* 确保图片显示完整 */
+            filter: brightness(0.7);
         }
         
         .banner-overlay {
@@ -175,7 +179,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5));
         }
         
         .banner-text {
@@ -186,32 +190,43 @@
             text-align: center;
             color: white;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            max-width: 900px;
+            max-width: 1000px;
+            width: 90%;
             padding: 0 20px;
         }
         
+        /* 协会名称改为红色一排显示 */
         .banner-title {
-            font-size: 2.8rem;
-            margin-bottom: 25px;
-            letter-spacing: 2px;
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            letter-spacing: 1px;
             animation: slideUp 1s ease-out;
+            display: inline-block;
+            background-color: rgba(255,255,255,0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
         }
         
+        /* 宗旨改为无顿号一排显示 */
         .banner-motto {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 500;
-            color: #ffd700;
-            margin-bottom: 30px;
+            color: white;
+            margin-bottom: 0;
             animation: slideUp 1s ease-out 0.3s forwards;
             opacity: 0;
+            letter-spacing: 3px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         
-        .banner-desc {
-            font-size: 1.1rem;
-            max-width: 700px;
-            margin: 0 auto;
-            animation: slideUp 1s ease-out 0.6s forwards;
-            opacity: 0;
+        .motto-item {
+            background-color: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 4px;
         }
         
         @keyframes slideUp {
@@ -356,7 +371,7 @@
             }
             
             .sidebar {
-                width: 280px;
+                width: 300px;
                 border-right: 1px solid #eee;
                 border-bottom: none;
                 height: 100vh;
@@ -364,13 +379,16 @@
                 top: 0;
             }
             
+            /* 桌面端导航按钮也保持一行 */
             .nav-buttons {
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
+                justify-content: center;
+                padding: 0 15px;
             }
             
             .nav-btn {
-                width: 85%;
+                width: auto;
             }
             
             .volunteer-item {
@@ -390,7 +408,7 @@
             }
             
             .banner-motto {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .about-container {
@@ -414,7 +432,12 @@
             }
             
             .banner-title {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            
+            .banner-motto {
+                font-size: 1.2rem;
+                gap: 10px;
             }
             
             .volunteer-item {
@@ -440,6 +463,7 @@
                 <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/6.png?raw=true" 
                      alt="河北省爱心公益协会logo" class="logo">
             </div>
+            <!-- 四个板块按钮放在一行 -->
             <div class="nav-buttons">
                 <button class="nav-btn active" onclick="showSection('home')">首页</button>
                 <button class="nav-btn" onclick="showSection('about')">关于我们</button>
@@ -450,19 +474,23 @@
         
         <!-- 右侧内容区域 -->
         <div class="content">
-            <!-- 首页板块 - 已更换为指定图片 -->
+            <!-- 首页板块 - 调整后样式 -->
             <div id="home" class="section active">
                 <div class="home-banner">
                     <img src="https://github.com/wmk298031/WMK298031.github.io/blob/f920b27700132f7baa6505ecb65424cbc9aadf71/tu7.jpg?raw=true" 
                          alt="协会活动横幅" class="banner-image">
                     <div class="banner-overlay"></div>
                     <div class="banner-text">
+                        <!-- 协会名称红色一排显示 -->
                         <h1 class="banner-title">河北省爱心公益协会</h1>
-                        <p class="banner-motto">爱国、奉献、互助、善行</p>
-                        <p class="banner-desc">
-                            我们致力于整合社会爱心力量，开展扶贫济困、助老助残助学助孤等公益活动，
-                            提升人民群众幸福满意度，促进河北省公益慈善事业蓬勃健康发展。
-                        </p>
+                        
+                        <!-- 宗旨无顿号一排显示 -->
+                        <div class="banner-motto">
+                            <span class="motto-item">爱国</span>
+                            <span class="motto-item">奉献</span>
+                            <span class="motto-item">互助</span>
+                            <span class="motto-item">善行</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -498,31 +526,35 @@
                         <p class="volunteer-text indent">为推动形成更好的“平等、包容、互助”的社会氛围，河北省爱心公益协会与长安区团委联合举办小橘灯爱心接力活动。帮助儿童增强自我保护意识并提高其社交能力，组织志愿者深入到结对帮扶的残障家庭中走访慰问。在六一儿童节时，号召社会各界爱心单位及爱心人士参与到小橘灯爱心接力活动中，为构建更温暖更包容的社会赋能，为社会支持体系的完善贡献力量。</p>
                     </div>
                     
-                    <!-- 志愿活动2-6 内容保持不变 -->
+                    <!-- 志愿活动2 -->
                     <div class="volunteer-item">
                         <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu2.png?raw=true" 
                              alt="烈士陵园志愿活动" class="volunteer-image">
                         <p class="volunteer-text indent">协会与华北军区烈士陵园共同营造尊崇英烈、热爱英雄的社会氛围，同时招募小讲解员在陵园讲解，让更多人了解华北革命历史，传承爱国情怀，引领带动更多社会力量参与红色公益，共同守护英烈精神，传递社会正能量。</p>
                     </div>
                     
+                    <!-- 志愿活动3 -->
                     <div class="volunteer-item">
                         <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu3.jpg?raw=true" 
                              alt="纪念馆志愿活动" class="volunteer-image">
                         <p class="volunteer-text indent">河北省爱心公益协会以饱满的热情和高标准的志愿服务，配合石家庄解放纪念馆工作人员，开展咨询解答、导引观众、维护秩序、帮扶残障重点观众，让红色展馆在志愿红的参与下，绽放出更加绚丽光芒，让观众感受到石家庄无处不在的文明之风。</p>
                     </div>
                     
+                    <!-- 志愿活动4 -->
                     <div class="volunteer-item">
                         <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu4.jpg?raw=true" 
                              alt="车站义警活动" class="volunteer-image">
                         <p class="volunteer-text indent">河北省爱心公益协会“义警”队员配合警方在石家庄站开展安全防范。同时，队员还将为老年旅客、残障人士等特殊旅客群体提供贴心志愿服务。进一步推动“风险共治、安全共享”的联勤警务格局，以实际行动为"轨道上的京津冀"建设注入更多平安力量，让旅客出行更加安心、舒心。</p>
                     </div>
                     
+                    <!-- 志愿活动5 -->
                     <div class="volunteer-item">
                         <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu5.jpg?raw=true" 
                              alt="图书馆志愿活动" class="volunteer-image">
                         <p class="volunteer-text indent">河北省爱心公益协会志愿者们在细心归类整理图书同时，化身为文明阅读倡导者，用和声细语，劝阻着个别读者喧哗、吸烟、吃东西等不文明⾏为，并⽤耐心和微笑传递着文明阅读理念，培育着文明和谐读书氛围。</p>
                     </div>
                     
+                    <!-- 志愿活动6 -->
                     <div class="volunteer-item">
                         <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu6.jpg?raw=true" 
                              alt="重点旅客服务" class="volunteer-image">
@@ -559,7 +591,6 @@
             </div>
         </div>
     </div>
-
     <script>
         // 板块切换功能
         function showSection(sectionId) {
@@ -575,7 +606,6 @@
             
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
-
         window.onload = function() {
             showSection('home');
             document.querySelector('.nav-btn[onclick="showSection(\'home\')"]').classList.add('active');
