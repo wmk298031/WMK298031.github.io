@@ -1,9 +1,3 @@
-from flask import Flask, render_template_string
-
-app = Flask(__name__)
-
-# 定义HTML模板内容
-html_template = '''
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -18,87 +12,136 @@ html_template = '''
         }
         
         body {
-            display: flex;
-            min-height: 100vh;
             font-family: "Microsoft YaHei", sans-serif;
+            line-height: 1.6;
         }
         
-        /* 左侧导航栏样式 */
-        .sidebar {
-            width: 250px;
-            background-color: #f0f8ff;
-            border-right: 2px solid #ccc;
-            padding: 20px 0;
+        .container {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            min-height: 100vh;
+        }
+        
+        /* 左侧导航样式 */
+        .sidebar {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
         }
         
         .logo {
-            width: 180px;
+            max-width: 180px;
             height: auto;
-            margin-bottom: 40px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .nav-btn {
-            width: 80%;
-            padding: 15px;
-            margin: 10px 0;
-            background-color: #4CAF50;
+            padding: 10px 20px;
+            background-color: #e74c3c;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
         
         .nav-btn:hover {
-            background-color: #45a049;
+            background-color: #c0392b;
+            transform: translateY(-2px);
         }
         
         .nav-btn.active {
-            background-color: #2e7d32;
+            background-color: #c0392b;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         /* 右侧内容区域样式 */
         .content {
             flex: 1;
-            padding: 30px;
-            overflow-y: auto;
+            overflow: hidden;
         }
         
         .section {
             display: none;
+            padding: 20px;
+            animation: fadeIn 0.8s ease-in-out;
         }
         
         .section.active {
             display: block;
-            animation: fadeIn 0.5s;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        /* 关于我们板块样式 */
+        /* 首页样式 */
+        .home-banner {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+        
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .banner-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .banner-motto {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        /* 关于我们样式 */
         .about-container {
             display: flex;
+            flex-direction: column;
+            gap: 20px;
             align-items: center;
-            gap: 30px;
         }
         
         .about-image {
-            width: 400px;
+            width: 100%;
+            max-width: 600px;
             height: auto;
             border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .about-text {
-            flex: 1;
+            max-width: 800px;
             line-height: 1.8;
-            font-size: 16px;
         }
         
         .indent {
@@ -106,147 +149,241 @@ html_template = '''
         }
         
         .red-bold {
-            color: red;
+            color: #e74c3c;
             font-weight: bold;
             margin: 10px 0;
             display: inline-block;
         }
         
-        /* 志愿风采板块样式 */
+        /* 志愿风采样式 */
+        .volunteer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
         .volunteer-item {
             display: flex;
-            margin-bottom: 40px;
-            gap: 30px;
-            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .volunteer-image {
-            width: 300px;
+            width: 100%;
             height: 200px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 5px;
         }
         
         .volunteer-text {
-            flex: 1;
             line-height: 1.8;
         }
         
-        /* 轮椅借用板块样式 */
+        /* 轮椅借用样式 */
         .wheelchair-container {
+            max-width: 800px;
+            margin: 0 auto;
             text-align: center;
         }
         
         .wheelchair-image {
+            width: 100%;
             max-width: 600px;
             height: auto;
             border-radius: 8px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .wheelchair-text {
-            max-width: 800px;
-            margin: 0 auto;
+            text-align: left;
             line-height: 1.8;
+        }
+        
+        .rules-title {
+            font-size: 1.5rem;
+            color: #e74c3c;
+            margin: 20px 0 10px;
+        }
+        
+        /* 响应式设计 */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+            
+            .sidebar {
+                width: 250px;
+                border-right: 1px solid #dee2e6;
+                border-bottom: none;
+                height: 100vh;
+                position: sticky;
+                top: 0;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 80%;
+            }
+            
+            .volunteer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .volunteer-item {
+                flex-direction: row;
+            }
+            
+            .volunteer-image {
+                width: 30%;
+                height: auto;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .volunteer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .banner-title {
+                font-size: 3.5rem;
+            }
+            
+            .banner-motto {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 左侧导航栏 -->
-    <div class="sidebar">
-        <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/6.png?raw=true" 
-             alt="河北省爱心公益协会logo" class="logo">
-        <button class="nav-btn active" onclick="showSection('about')">关于我们</button>
-        <button class="nav-btn" onclick="showSection('volunteer')">志愿风采</button>
-        <button class="nav-btn" onclick="showSection('wheelchair')">轮椅借用规则</button>
-        <button class="nav-btn" onclick="showSection('contact')">联系我们</button>
-    </div>
-    
-    <!-- 右侧内容区域 -->
-    <div class="content">
-        <!-- 关于我们板块 -->
-        <div id="about" class="section active">
-            <div class="about-container">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/lianxiwomen.jpg?raw=true" 
-                     alt="关于我们" class="about-image">
-                <div class="about-text">
-                    <p class="indent">河北省爱心公益协会，于2022年2月24日由省民政厅直接登记。3月11日召开了成立大会，为公益慈善类社会团体。河北省爱心公益协会，将为我省爱心单位、爱心人士搭建规范的公益活动平台，整合、凝聚和引领我省社会爱心公益慈善力量，配合政府开展扶贫济困，助老助残助学助孤，抢险救灾和建设友善睦邻社区公益慈善服务，提升人民群众幸福满意度，促进我省公益慈善事业蓬勃健康发展。</p>
-                    
-                    <p><span class="red-bold">协会宗旨：</span>爱国、奉献、互助、善行。</p>
-                    
-                    <p><span class="red-bold">业务范围：</span>宣传培训、扶贫济困，公益援助，组织公益慈善活动、接受捐赠，调查研究、激励回馈、交流与合作;承担政府及相关部门委托、授权的工作事项。接受政府职能转移和购买服务，开展与本协会章程，宗旨相符的公益慈善相关活动。</p>
-                    
-                    <p><span class="red-bold">协会理念：</span>天地之间有真爱!</p>
+    <div class="container">
+        <!-- 左侧导航 -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/6.png?raw=true" 
+                     alt="河北省爱心公益协会logo" class="logo">
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('home')">首页</button>
+                <button class="nav-btn" onclick="showSection('about')">关于我们</button>
+                <button class="nav-btn" onclick="showSection('volunteer')">志愿风采</button>
+                <button class="nav-btn" onclick="showSection('wheelchair')">轮椅借用</button>
+            </div>
+        </div>
+        
+        <!-- 右侧内容区域 -->
+        <div class="content">
+            <!-- 首页板块 -->
+            <div id="home" class="section active">
+                <div class="home-banner">
+                    <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/lianxiwomen.jpg?raw=true" 
+                         alt="协会活动横幅" class="banner-image">
+                    <div class="banner-text">
+                        <h1 class="banner-title">河北省爱心公益协会</h1>
+                        <p class="banner-motto">爱国、奉献、互助、善行</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- 志愿风采板块 -->
-        <div id="volunteer" class="section">
-            <!-- 志愿活动1 -->
-            <div class="volunteer-item">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu1.jpg?raw=true" 
-                     alt="小橘灯爱心接力活动" class="volunteer-image">
-                <p class="volunteer-text indent">为推动形成更好的“平等、包容、互助”的社会氛围，河北省爱心公益协会与长安区团委联合举办小橘灯爱心接力活动。帮助儿童增强自我保护意识并提高其社交能力，组织志愿者深入到结对帮扶的残障家庭中走访慰问。在六一儿童节时，号召社会各界爱心单位及爱心人士参与到小橘灯爱心接力活动中，为构建更温暖更包容的社会赋能，为社会支持体系的完善贡献力量。</p>
-            </div>
             
-            <!-- 志愿活动2 -->
-            <div class="volunteer-item">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu2.png?raw=true" 
-                     alt="烈士陵园志愿活动" class="volunteer-image">
-                <p class="volunteer-text indent">协会与华北军区烈士陵园共同营造尊崇英烈、热爱英雄的社会氛围，同时招募小讲解员在陵园讲解，让更多人了解华北革命历史，传承爱国情怀，引领带动更多社会力量参与红色公益，共同守护英烈精神，传递社会正能量。</p>
-            </div>
-            
-            <!-- 志愿活动3 -->
-            <div class="volunteer-item">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu3.jpg?raw=true" 
-                     alt="纪念馆志愿活动" class="volunteer-image">
-                <p class="volunteer-text indent">河北省爱心公益协会以饱满的热情和高标准的志愿服务，配合石家庄解放纪念馆工作人员，开展咨询解答、导引观众、维护秩序、帮扶残障重点观众，让红色展馆在志愿红的参与下，绽放出更加绚丽光芒，让观众感受到石家庄无处不在的文明之风。</p>
-            </div>
-            
-            <!-- 志愿活动4 -->
-            <div class="volunteer-item">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu4.jpg?raw=true" 
-                     alt="车站义警活动" class="volunteer-image">
-                <p class="volunteer-text indent">河北省爱心公益协会“义警”队员配合警方在石家庄站开展安全防范。同时，队员还将为老年旅客、残障人士等特殊旅客群体提供贴心志愿服务。进一步推动“风险共治、安全共享”的联勤警务格局，以实际行动为"轨道上的京津冀"建设注入更多平安力量，让旅客出行更加安心、舒心。</p>
-            </div>
-            
-            <!-- 志愿活动5 -->
-            <div class="volunteer-item">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu5.jpg?raw=true" 
-                     alt="图书馆志愿活动" class="volunteer-image">
-                <p class="volunteer-text indent">河北省爱心公益协会志愿者们在细心归类整理图书同时，化身为文明阅读倡导者，用和声细语，劝阻着个别读者喧哗、吸烟、吃东西等不文明⾏为，并⽤耐心和微笑传递着文明阅读理念，培育着文明和谐读书氛围。</p>
-            </div>
-            
-            <!-- 志愿活动6 -->
-            <div class="volunteer-item">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu6.jpg?raw=true" 
-                     alt="重点旅客服务" class="volunteer-image">
-                <p class="volunteer-text indent">石家庄站服务聚焦老、弱、病、残、孕及携带婴幼儿等重点旅客群体，精准对接他们行动不便、交流受阻等出行难题，已构建起覆盖站区、候车室、地铁的无缝衔接立体服务体系，让重点旅客与普通旅客一样，都能享受到快乐顺畅的出行体验。</p>
-            </div>
-        </div>
-        
-        <!-- 轮椅借用规则板块 -->
-        <div id="wheelchair" class="section">
-            <div class="wheelchair-container">
-                <img src="https://github.com/wmk298031/WMK298031.github.io/blob/f920b27700132f7baa6505ecb65424cbc9aadf71/tu7.jpg?raw=true" 
-                     alt="轮椅借用" class="wheelchair-image">
-                <div class="wheelchair-text">
-                    <p class="indent">河北省爱心公益协会为方便残障人士、老年人等行动不便群体出行，特提供轮椅借用服务。借用时需凭有效身份证件登记，使用完毕后请及时归还。借用期限一般为当天，如有特殊情况需延长使用，请提前与工作人员联系。使用过程中请爱护轮椅，如有损坏需按规定赔偿。轮椅借用服务免费提供，如有疑问可咨询协会工作人员。</p>
+            <!-- 关于我们板块 -->
+            <div id="about" class="section">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #333;">关于我们</h2>
+                <div class="about-container">
+                    <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/lianxiwomen.jpg?raw=true" 
+                         alt="关于我们" class="about-image">
+                    <div class="about-text">
+                        <p class="indent">河北省爱心公益协会，于2022年2月24日由省民政厅直接登记。3月11日召开了成立大会，为公益慈善类社会团体。河北省爱心公益协会，将为我省爱心单位、爱心人士搭建规范的公益活动平台，整合、凝聚和引领我省社会爱心公益慈善力量，配合政府开展扶贫济困，助老助残助学助孤，抢险救灾和建设友善睦邻社区公益慈善服务，提升人民群众幸福满意度，促进我省公益慈善事业蓬勃健康发展。</p>
+                        
+                        <p><span class="red-bold">协会宗旨：</span>爱国、奉献、互助、善行。</p>
+                        
+                        <p><span class="red-bold">业务范围：</span>宣传培训、扶贫济困，公益援助，组织公益慈善活动、接受捐赠，调查研究、激励回馈、交流与合作;承担政府及相关部门委托、授权的工作事项。接受政府职能转移和购买服务，开展与本协会章程，宗旨相符的公益慈善相关活动。</p>
+                        
+                        <p><span class="red-bold">协会理念：</span>天地之间有真爱!</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- 联系我们板块 -->
-        <div id="contact" class="section">
-            <div style="text-align: center; padding: 50px;">
-                <h2 style="margin-bottom: 30px;">联系我们</h2>
-                <p style="line-height: 2; font-size: 18px;">
-                    地址：河北省石家庄市长安区中山东路126号<br>
-                    电话：0311-12345678<br>
-                    邮箱：hebeiaixinhui@163.com<br>
-                    工作时间：周一至周五 9:00-17:00
-                </p>
+            
+            <!-- 志愿风采板块 -->
+            <div id="volunteer" class="section">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #333;">志愿风采</h2>
+                <div class="volunteer-grid">
+                    <!-- 志愿活动1 -->
+                    <div class="volunteer-item">
+                        <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu1.jpg?raw=true" 
+                             alt="小橘灯爱心接力活动" class="volunteer-image">
+                        <p class="volunteer-text indent">为推动形成更好的“平等、包容、互助”的社会氛围，河北省爱心公益协会与长安区团委联合举办小橘灯爱心接力活动。帮助儿童增强自我保护意识并提高其社交能力，组织志愿者深入到结对帮扶的残障家庭中走访慰问。在六一儿童节时，号召社会各界爱心单位及爱心人士参与到小橘灯爱心接力活动中，为构建更温暖更包容的社会赋能，为社会支持体系的完善贡献力量。</p>
+                    </div>
+                    
+                    <!-- 志愿活动2 -->
+                    <div class="volunteer-item">
+                        <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu2.png?raw=true" 
+                             alt="烈士陵园志愿活动" class="volunteer-image">
+                        <p class="volunteer-text indent">协会与华北军区烈士陵园共同营造尊崇英烈、热爱英雄的社会氛围，同时招募小讲解员在陵园讲解，让更多人了解华北革命历史，传承爱国情怀，引领带动更多社会力量参与红色公益，共同守护英烈精神，传递社会正能量。</p>
+                    </div>
+                    
+                    <!-- 志愿活动3 -->
+                    <div class="volunteer-item">
+                        <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu3.jpg?raw=true" 
+                             alt="纪念馆志愿活动" class="volunteer-image">
+                        <p class="volunteer-text indent">河北省爱心公益协会以饱满的热情和高标准的志愿服务，配合石家庄解放纪念馆工作人员，开展咨询解答、导引观众、维护秩序、帮扶残障重点观众，让红色展馆在志愿红的参与下，绽放出更加绚丽光芒，让观众感受到石家庄无处不在的文明之风。</p>
+                    </div>
+                    
+                    <!-- 志愿活动4 -->
+                    <div class="volunteer-item">
+                        <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu4.jpg?raw=true" 
+                             alt="车站义警活动" class="volunteer-image">
+                        <p class="volunteer-text indent">河北省爱心公益协会“义警”队员配合警方在石家庄站开展安全防范。同时，队员还将为老年旅客、残障人士等特殊旅客群体提供贴心志愿服务。进一步推动“风险共治、安全共享”的联勤警务格局，以实际行动为"轨道上的京津冀"建设注入更多平安力量，让旅客出行更加安心、舒心。</p>
+                    </div>
+                    
+                    <!-- 志愿活动5 -->
+                    <div class="volunteer-item">
+                        <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu5.jpg?raw=true" 
+                             alt="图书馆志愿活动" class="volunteer-image">
+                        <p class="volunteer-text indent">河北省爱心公益协会志愿者们在细心归类整理图书同时，化身为文明阅读倡导者，用和声细语，劝阻着个别读者喧哗、吸烟、吃东西等不文明⾏为，并⽤耐心和微笑传递着文明阅读理念，培育着文明和谐读书氛围。</p>
+                    </div>
+                    
+                    <!-- 志愿活动6 -->
+                    <div class="volunteer-item">
+                        <img src="https://github.com/wmk298031/WMK298031.github.io/blob/0c43d3e6f640f82391dc19d2515f9a0965fd7550/tu6.jpg?raw=true" 
+                             alt="重点旅客服务" class="volunteer-image">
+                        <p class="volunteer-text indent">石家庄站服务聚焦老、弱、病、残、孕及携带婴幼儿等重点旅客群体，精准对接他们行动不便、交流受阻等出行难题，已构建起覆盖站区、候车室、地铁的无缝衔接立体服务体系，让重点旅客与普通旅客一样，都能享受到快乐顺畅的出行体验。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 轮椅借用板块 -->
+            <div id="wheelchair" class="section">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #333;">轮椅借用规则与教程</h2>
+                <div class="wheelchair-container">
+                    <img src="https://github.com/wmk298031/WMK298031.github.io/blob/f920b27700132f7baa6505ecb65424cbc9aadf71/tu7.jpg?raw=true" 
+                         alt="轮椅借用" class="wheelchair-image">
+                    
+                    <div class="wheelchair-text">
+                        <h3 class="rules-title">借用规则</h3>
+                        <p class="indent">1. 借用对象：残障人士、老年人及其他行动不便者。</p>
+                        <p class="indent">2. 借用时需凭有效身份证件（身份证、护照等）进行登记。</p>
+                        <p class="indent">3. 借用时间：一般为当天借还，如有特殊情况需延长使用，请提前与工作人员联系。</p>
+                        <p class="indent">4. 借用期间请爱护轮椅，保持清洁，避免损坏。如因使用不当造成损坏，需按规定赔偿。</p>
+                        <p class="indent">5. 轮椅为公益服务设施，请勿私自占用、转借或用于商业用途。</p>
+                        
+                        <h3 class="rules-title">使用教程</h3>
+                        <p class="indent">1. 调节座椅高度：根据使用者需求，松开座椅下方调节杆，调整至合适高度后锁紧。</p>
+                        <p class="indent">2. 安全带使用：使用者就座后，请系好腰部安全带，确保安全。</p>
+                        <p class="indent">3. 刹车操作：轮椅两侧均有刹车装置，按下即可制动，抬起即可解除。停靠时请务必锁紧刹车。</p>
+                        <p class="indent">4. 折叠方法：双手握住座椅两侧，向上提拉即可折叠，方便携带和存放。</p>
+                        <p class="indent">5. 注意事项：推行时请缓慢行驶，避免在颠簸路面快速移动；上下坡时请有人协助，保持平稳。</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -268,14 +405,12 @@ html_template = '''
             });
             event.currentTarget.classList.add('active');
         }
+
+        // 页面加载完成后默认显示首页
+        window.onload = function() {
+            showSection('home');
+            document.querySelector('.nav-btn[onclick="showSection(\'home\')"]').classList.add('active');
+        };
     </script>
 </body>
 </html>
-'''
-
-@app.route('/')
-def index():
-    return render_template_string(html_template)
-
-if __name__ == '__main__':
-    app.run(debug=True)
